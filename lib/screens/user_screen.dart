@@ -52,6 +52,7 @@ class _UserScreenState extends State<UserScreen> with AutomaticKeepAliveClientMi
                                 child: Text('${user.email}'),
                               );
                             },
+                            fail: () => Container(),
                           ),
                           WidgetCallSafe(
                             checkIfNull: () => user.bio != null,
@@ -61,6 +62,29 @@ class _UserScreenState extends State<UserScreen> with AutomaticKeepAliveClientMi
                                 child: Text('${user.bio}'),
                               );
                             },
+                            fail: () => Container(),
+                          ),
+                          WidgetCallSafe(
+                            checkIfNull: () => user.company != null,
+                            success: () {
+                              return ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                leading: const Icon(Icons.people),
+                                title: Text('${user.company}'),
+                              );
+                            },
+                            fail: () => Container(),
+                          ),
+                          WidgetCallSafe(
+                            checkIfNull: () => user.location != null,
+                            success: () {
+                              return ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                leading: const Icon(Icons.person_pin_circle),
+                                title: Text('${user.location}'),
+                              );
+                            },
+                            fail: () => Container(),
                           ),
                         ],
                       );
