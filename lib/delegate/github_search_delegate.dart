@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:github_devdojo/models/repository.dart';
 import 'package:github_devdojo/services/github_service.dart';
 import 'package:github_devdojo/utils/pagination.dart';
+import 'package:github_devdojo/widgets/async_layout_constructor.dart';
 import 'package:github_devdojo/widgets/text_icon.dart';
 
 class GitHubSearchDelegate extends SearchDelegate<String> {
@@ -62,24 +63,19 @@ class _RepositoryListState extends State<RepositoryList> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Pagination<Repository>>(
+    return AsyncLayoutConstructor<Pagination<Repository>>(
       future: GitHubService.findAllRepositoryByName(widget.query, page),
-      builder: (BuildContext context, AsyncSnapshot<Pagination<Repository>> snapshot) {
-        if (snapshot.hasError) {
-          return Center(child: Text('Erro!'));
-        }
-
-        if (snapshot.hasData) {
-          return ListView.builder(
-            itemCount: snapshot.data.items.length,
-            itemBuilder: (context, index) {
-              return RepositoryView(repository: snapshot.data.items[index]);
-            },
-          );
-        }
-
-        return Center(child: CircularProgressIndicator());
+      hasDataWidget: (data) {
+        return ListView.builder(
+          itemCount: data.items.length,
+          itemBuilder: (context, index) {
+            return RepositoryView(repository: data.items[index]);
+          },
+        );
       },
+      hasErrorWidget: (err) => Center(child: Text('Erro!')),
+      loadingWidget: () => Center(child: CircularProgressIndicator()),
+      hasDataEmptyWidget: () => Container(),
     );
   }
 }
