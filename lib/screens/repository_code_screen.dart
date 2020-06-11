@@ -3,6 +3,7 @@ import 'package:github_devdojo/models/content_model.dart';
 import 'package:github_devdojo/models/repository.dart';
 import 'package:github_devdojo/services/github_service.dart';
 import 'package:github_devdojo/widgets/async_layout_constructor.dart';
+import 'package:github_devdojo/widgets/list_content.dart';
 
 class RepositoryCodeScreen extends StatefulWidget {
   final Repository repository;
@@ -22,9 +23,7 @@ class _RepositoryCodeScreenState extends State<RepositoryCodeScreen> {
         hasDataWidget: (data) {
           return NestedScrollView(
             headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) => [],
-            body: const Center(
-              child: const Text('OK'),
-            ),
+            body: ListContent(contents: data),
           );
         },
         hasErrorWidget: (err) => const Center(child: const Text('Ocorreu um erro!!')),
