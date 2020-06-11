@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:github_devdojo/http/http_provider.dart';
+import 'package:github_devdojo/models/content_model.dart';
 import 'package:github_devdojo/models/repository.dart';
 import 'package:github_devdojo/models/user_model.dart';
 import 'package:github_devdojo/utils/api_path.dart';
@@ -16,6 +17,14 @@ abstract class GitHubService {
     List<Repository> repositories = iterable.map((repository) => Repository.fromJson(repository)).toList();
 
     return Pagination<Repository>(total: keyMap['total_count'], items: repositories);
+  }
+
+  static Future<List<ContentModel>> findAllContentsByFullName(String fullName) async {
+    final response = await HttpProvider.get('$apiPath/repos/$fullName/contents');
+
+    Iterable iterable = json.decode(response.body);
+
+    return iterable.map((content) => ContentModel.fromJson(content)).toList();
   }
 
   static Future<UserModel> findUserByUrl(String url) async {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:github_devdojo/models/repository.dart';
+import 'package:github_devdojo/screens/repository_code_screen.dart';
 import 'package:github_devdojo/screens/user_screen.dart';
 import 'package:github_devdojo/widgets/text_icon.dart';
 
@@ -44,7 +45,7 @@ class _RepositoryTabScreenState extends State<RepositoryTabScreen> {
           },
           body: TabBarView(
             children: <Widget>[
-              Container(color: Colors.red),
+              RepositoryCodeScreen(repository: widget.repository),
               UserScreen(url: widget.repository.owner.url),
             ],
           ),
