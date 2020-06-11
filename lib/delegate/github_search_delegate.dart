@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:github_devdojo/models/repository.dart';
+import 'package:github_devdojo/services/github_service.dart';
+import 'package:github_devdojo/utils/pagination.dart';
 
 class GitHubSearchDelegate extends SearchDelegate<String> {
   @override
@@ -26,7 +29,7 @@ class GitHubSearchDelegate extends SearchDelegate<String> {
       return Container();
     }
 
-    return Text('Buscando com SUccesso!');
+    return RepositoryList(query: query);
   }
 
   @override
@@ -43,4 +46,39 @@ class GitHubSearchDelegate extends SearchDelegate<String> {
 
   @override
   String get searchFieldLabel => 'Pesquisar';
+}
+
+class RepositoryList extends StatefulWidget {
+  final String query;
+
+  const RepositoryList({Key key, @required this.query}) : super(key: key);
+  @override
+  _RepositoryListState createState() => _RepositoryListState();
+}
+
+class _RepositoryListState extends State<RepositoryList> {
+  int page = 1;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<Pagination<Repository>>(
+      future: GitHubService.findAllRepositoryByName(widget.query, page),
+      builder: (BuildContext context, AsyncSnapshot<Pagination<Repository>> snapshot) {
+        if (snapshot.hasError) {
+          return Center(child: Text('Erro!'));
+        }
+
+        if (snapshot.hasData) {
+          return ListView.builder(
+            itemCount: snapshot.data.items.length,
+            itemBuilder: (context, index) {
+              return Text("${snapshot.data.items[index].name}");
+            },
+          );
+        }
+
+        return Center(child: CircularProgressIndicator());
+      },
+    );
+  }
 }
