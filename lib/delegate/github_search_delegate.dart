@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:github_devdojo/models/repository.dart';
+import 'package:github_devdojo/screens/repository_tab_screen.dart';
 import 'package:github_devdojo/services/github_service.dart';
 import 'package:github_devdojo/utils/pagination.dart';
 import 'package:github_devdojo/widgets/async_layout_constructor.dart';
@@ -136,7 +137,11 @@ class RepositoryView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+          return RepositoryTabScreen(repository: repository);
+        }));
+      },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
