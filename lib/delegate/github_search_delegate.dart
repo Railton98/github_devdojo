@@ -59,24 +59,72 @@ class RepositoryList extends StatefulWidget {
 }
 
 class _RepositoryListState extends State<RepositoryList> {
+  final List<Widget> cache = [];
+  Future<List<Widget>> future;
+  final maxGitResults = 1000;
   int page = 1;
 
   @override
+  void initState() {
+    future = findAllRepositoryByName();
+    super.initState();
+  }
+
+  Future<List<Widget>> findAllRepositoryByName() async {
+    final pagination = await GitHubService.findAllRepositoryByName(widget.query, page);
+    if (cache.isEmpty) {
+      cache.add(
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Flexible(child: const Text('Repositórios encontrados')),
+              Text('${pagination.total}'),
+            ],
+          ),
+        ),
+      );
+    }
+
+    if (cache.last is LoadingList) {
+      cache.removeLast();
+    }
+
+    cache.addAll(pagination.items.map((it) => RepositoryView(repository: it)));
+    if (haveMore(pagination)) {
+      cache.add(LoadingList());
+    }
+    page++;
+    return cache;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return AsyncLayoutConstructor<Pagination<Repository>>(
-      future: GitHubService.findAllRepositoryByName(widget.query, page),
+    return AsyncLayoutConstructor<List<Widget>>(
+      future: future,
       hasDataWidget: (data) {
-        return ListView.builder(
-          itemCount: data.items.length,
+        return ListView.separated(
+          itemCount: data.length,
+          addAutomaticKeepAlives: false,
           itemBuilder: (context, index) {
-            return RepositoryView(repository: data.items[index]);
+            if (data[index] is LoadingList) {
+              future = findAllRepositoryByName().whenComplete(() => setState(() {}));
+            }
+            return data[index];
           },
+          separatorBuilder: (BuildContext context, int index) => Divider(),
         );
       },
       hasErrorWidget: (err) => Center(child: Text('Erro!')),
       loadingWidget: () => Center(child: CircularProgressIndicator()),
       hasDataEmptyWidget: () => Container(),
     );
+  }
+
+  bool haveMore(Pagination<Repository> pagination) {
+    int total = cache.where((it) => it is RepositoryView).length;
+    return (total < pagination.total && total < maxGitResults) ? true : false;
   }
 }
 
@@ -125,5 +173,12 @@ class RepositoryView extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class LoadingList extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return const Center(child: CircularProgressIndicator());
   }
 }
