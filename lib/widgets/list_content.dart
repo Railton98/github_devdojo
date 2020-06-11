@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:github_devdojo/models/content_model.dart';
+import 'package:github_devdojo/screens/repository_content_blob_screen.dart';
 import 'package:github_devdojo/screens/repository_folder_screen.dart';
 
 class ListContent extends StatelessWidget {
@@ -43,7 +44,14 @@ class ListContent extends StatelessWidget {
           ),
         );
       },
-      'file': () {},
+      'file': () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => RepositoryContentBlobScreen(content: content),
+          ),
+        );
+      },
     };
 
     return typeCallback[content.type];

@@ -43,11 +43,14 @@ class _RepositoryTabScreenState extends State<RepositoryTabScreen> {
               ),
             ];
           },
-          body: TabBarView(
-            children: <Widget>[
-              RepositoryCodeScreen(repository: widget.repository),
-              UserScreen(url: widget.repository.owner.url),
-            ],
+          body: Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: TabBarView(
+              children: <Widget>[
+                RepositoryCodeScreen(repository: widget.repository),
+                UserScreen(url: widget.repository.owner.url),
+              ],
+            ),
           ),
         ),
       ),

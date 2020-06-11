@@ -14,9 +14,14 @@ class RepositoryCodeScreen extends StatefulWidget {
   _RepositoryCodeScreenState createState() => _RepositoryCodeScreenState();
 }
 
-class _RepositoryCodeScreenState extends State<RepositoryCodeScreen> {
+class _RepositoryCodeScreenState extends State<RepositoryCodeScreen> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return Scaffold(
       body: AsyncLayoutConstructor<List<ContentModel>>(
         future: GitHubService.findAllContentsByFullName(widget.repository.fullName),
