@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:github_devdojo/models/content_model.dart';
+import 'package:github_devdojo/screens/repository_folder_screen.dart';
 
 class ListContent extends StatelessWidget {
   final List<ContentModel> contents;
@@ -24,11 +25,27 @@ class ListContent extends StatelessWidget {
         final ContentModel content = folders[index];
         final Widget icon = typeWidget[content.type];
         return ListTile(
-          onTap: () {},
+          onTap: callback(context, content),
           leading: icon,
           title: Text(content.name),
         );
       },
     );
+  }
+
+  Function callback(BuildContext context, ContentModel content) {
+    final Map<String, Function> typeCallback = {
+      'dir': () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => RepositoryFolderScreen(content: content),
+          ),
+        );
+      },
+      'file': () {},
+    };
+
+    return typeCallback[content.type];
   }
 }
