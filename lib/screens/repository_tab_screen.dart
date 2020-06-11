@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:github_devdojo/models/repository.dart';
+import 'package:github_devdojo/screens/user_screen.dart';
 import 'package:github_devdojo/widgets/text_icon.dart';
 
 class RepositoryTabScreen extends StatefulWidget {
@@ -44,7 +45,7 @@ class _RepositoryTabScreenState extends State<RepositoryTabScreen> {
           body: TabBarView(
             children: <Widget>[
               Container(color: Colors.red),
-              Container(color: Colors.blue),
+              UserScreen(url: widget.repository.owner.url),
             ],
           ),
         ),
