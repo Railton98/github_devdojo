@@ -40,4 +40,7 @@ class GitHubSearchDelegate extends SearchDelegate<String> {
       onTap: () => showResults(context),
     );
   }
+
+  @override
+  String get searchFieldLabel => 'Pesquisar';
 }
