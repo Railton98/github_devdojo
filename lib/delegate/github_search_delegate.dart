@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:github_devdojo/models/repository.dart';
 import 'package:github_devdojo/services/github_service.dart';
 import 'package:github_devdojo/utils/pagination.dart';
+import 'package:github_devdojo/widgets/text_icon.dart';
 
 class GitHubSearchDelegate extends SearchDelegate<String> {
   @override
@@ -72,13 +73,61 @@ class _RepositoryListState extends State<RepositoryList> {
           return ListView.builder(
             itemCount: snapshot.data.items.length,
             itemBuilder: (context, index) {
-              return Text("${snapshot.data.items[index].name}");
+              return RepositoryView(repository: snapshot.data.items[index]);
             },
           );
         }
 
         return Center(child: CircularProgressIndicator());
       },
+    );
+  }
+}
+
+class RepositoryView extends StatelessWidget {
+  final Repository repository;
+
+  const RepositoryView({Key key, this.repository}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {},
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            child: Row(
+              children: <Widget>[
+                Image.network(repository.owner.avatarUrl, width: 32, height: 32),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(repository.owner.login),
+                ),
+              ],
+            ),
+          ),
+          ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+            title: Text(repository.name),
+            subtitle: Text(repository?.description ?? 'Sem descrição!'),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Flexible(child: Text(repository?.language ?? 'Não definida')),
+                TextIcon(
+                  title: '${repository.stars}',
+                  icon: const Icon(Icons.stars, color: Colors.amberAccent),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

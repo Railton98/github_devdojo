@@ -13,6 +13,6 @@ class Repository {
         this.fullName = json['full_name'],
         this.description = json['description'],
         this.language = json['language'],
-        this.owner = json['name'] != null ? UserModel.fromJson(json) : null,
+        this.owner = json['owner'] != null ? UserModel.fromJson(json['owner']) : null,
         this.stars = json['stargazers_count'];
 }
